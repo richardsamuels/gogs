@@ -78,7 +78,7 @@ func (ls Ldapsource) SearchEntry(name, passwd string) (string, string, string, s
 		[]string{ls.AttributeUsername, ls.AttributeName, ls.AttributeSurname, ls.AttributeMail},
 		nil)
 	sr, err := l.Search(search)
-	if err != nil || len(sr.Entries) == 0 {
+	if err != nil || len(sr.Entries) != 1 {
 		log.Debug("LDAP Authen OK but not in filter %s", name)
 		return "", "", "", "", false
 	}
