@@ -83,11 +83,11 @@ func (ls Ldapsource) SearchEntry(name, passwd string) (string, string, string, s
 		return "", "", "", "", false
 	}
 	log.Debug("LDAP Authen OK: %s", name)
-        cn := sr.Entries[0].GetAttributeValue(ls.AttributeUsername)
-        entry_name := sr.Entries[0].GetAttributeValue(ls.AttributeName)
-        sn := sr.Entries[0].GetAttributeValue(ls.AttributeSurname)
-        mail := sr.Entries[0].GetAttributeValue(ls.AttributeMail)
-        return cn, entry_name, sn, mail, true
+	cn := sr.Entries[0].GetAttributeValue(ls.AttributeUsername)
+	entry_name := sr.Entries[0].GetAttributeValue(ls.AttributeName)
+	sn := sr.Entries[0].GetAttributeValue(ls.AttributeSurname)
+	mail := sr.Entries[0].GetAttributeValue(ls.AttributeMail)
+	return cn, entry_name, sn, mail, true
 }
 
 func ldapDial(ls Ldapsource) (*ldap.Conn, error) {
