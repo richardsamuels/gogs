@@ -67,9 +67,10 @@ func (ls Ldapsource) SearchEntry(name, passwd string) (string, string, string, s
 	nx := fmt.Sprintf(ls.MsAdSAFormat, name)
 	err = l.Bind(nx, passwd)
 	if err != nil {
-		log.Debug("LDAP Authan failed for %s, reason: %s", nx, err.Error())
+		log.Debug("LDAP Authentication failed for %s, reason: %s", nx, err.Error())
 		return "", "", "", "", false
 	}
+	log.Debug("LDAP user authenticated: %s", name)
 
 	search := ldap.NewSearchRequest(
 		ls.BaseDN,
@@ -79,10 +80,10 @@ func (ls Ldapsource) SearchEntry(name, passwd string) (string, string, string, s
 		nil)
 	sr, err := l.Search(search)
 	if err != nil || len(sr.Entries) != 1 {
-		log.Debug("LDAP Authen OK but not in filter %s", name)
+		log.Debug("LDAP user unauthorized by filter: %s", name)
 		return "", "", "", "", false
 	}
-	log.Debug("LDAP Authen OK: %s", name)
+	log.Debug("LDAP user authorized: %s", name)
 	cn := sr.Entries[0].GetAttributeValue(ls.AttributeUsername)
 	entry_name := sr.Entries[0].GetAttributeValue(ls.AttributeName)
 	sn := sr.Entries[0].GetAttributeValue(ls.AttributeSurname)
