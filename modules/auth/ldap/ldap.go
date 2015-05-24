@@ -78,19 +78,16 @@ func (ls Ldapsource) SearchEntry(name, passwd string) (string, string, string, s
 		[]string{ls.AttributeUsername, ls.AttributeName, ls.AttributeSurname, ls.AttributeMail},
 		nil)
 	sr, err := l.Search(search)
-	if err != nil {
+	if err != nil || len(sr.Entries) == 0 {
 		log.Debug("LDAP Authen OK but not in filter %s", name)
 		return "", "", "", "", false
 	}
 	log.Debug("LDAP Authen OK: %s", name)
-	if len(sr.Entries) > 0 {
-		cn := sr.Entries[0].GetAttributeValue(ls.AttributeUsername)
-		name := sr.Entries[0].GetAttributeValue(ls.AttributeName)
-		sn := sr.Entries[0].GetAttributeValue(ls.AttributeSurname)
-		mail := sr.Entries[0].GetAttributeValue(ls.AttributeMail)
-		return cn, name, sn, mail, true
-	}
-	return "", "", "", "", true
+        cn := sr.Entries[0].GetAttributeValue(ls.AttributeUsername)
+        entry_name := sr.Entries[0].GetAttributeValue(ls.AttributeName)
+        sn := sr.Entries[0].GetAttributeValue(ls.AttributeSurname)
+        mail := sr.Entries[0].GetAttributeValue(ls.AttributeMail)
+        return cn, entry_name, sn, mail, true
 }
 
 func ldapDial(ls Ldapsource) (*ldap.Conn, error) {
